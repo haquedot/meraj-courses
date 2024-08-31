@@ -41,61 +41,70 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       {/* Toggle button for mobile */}
       <button
         onClick={toggleSidebar}
-        className="fixed top-3 left-3 z-50 md:hidden p-1 bg-neutral-200 text-white rounded"
+        className="fixed top-3 left-3 z-50 md:hidden p-1 text-sm bg-neutral-100 text-white rounded"
       >
         {isOpen ? (
-          <FaAnglesLeft className='w-4 h-4 text-neutral-800' />
+          <FaAnglesLeft className='text-neutral-800' />
         ) : (
-          <FaAnglesRight className='w-4 h-4 text-neutral-800' />
+          <FaAnglesRight className='text-neutral-800' />
         )}
       </button>
 
       <div
-        className={`w-50 fixed top-0 left-0 h-full bg-gray-800 text-white min-h-screen pt-16 p-2 md:p-4 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`w-50 fixed top-0 left-0 h-full bg-white text-neutral-800 border-r min-h-screen pt-16 p-3 md:p-3 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <ul className="space-y-4">
           <li>
             <button
-              className={`flex w-full text-left p-2 ${activeSection === 'dashboard' ? 'bg-gray-600' : ''}`}
+              className={`rounded flex w-full text-left p-2 text-md items-center font-semibold ${activeSection === 'dashboard' ? 'bg-gray-100' : ''}`}
               onClick={() => handleSectionChange('dashboard')}
             >
-              <MdDashboard className='w-6 h-6' />
+              <MdDashboard className='' />
               <span className='ms-2'>Dashboard</span>
             </button>
           </li>
           <li>
             <button
-              className={`flex w-full text-left p-2 ${activeSection === 'enrolledCourses' ? 'bg-gray-600' : ''}`}
+              className={`rounded flex w-full text-left p-2 text-md items-center font-semibold ${activeSection === 'enrolledCourses' ? 'bg-gray-100' : ''}`}
               onClick={() => handleSectionChange('enrolledCourses')}
             >
-              <FaBookReader className='w-6 h-6' />
+              <FaBookReader className='' />
               <span className='ms-2'>Enrolled Courses</span>
             </button>
           </li>
           <li>
             <button
-              className={`flex w-full text-left p-2 ${activeSection === 'likedCourses' ? 'bg-gray-600' : ''}`}
+              className={`rounded flex w-full text-left p-2 text-md items-center font-semibold ${activeSection === 'completedCourses' ? 'bg-gray-100' : ''}`}
+              onClick={() => handleSectionChange('completedCourses')}
+            >
+              <FaBookReader className='' />
+              <span className='ms-2'>Completed Courses</span>
+            </button>
+          </li>
+          <li>
+            <button
+              className={`rounded flex w-full text-left p-2 text-md items-center font-semibold ${activeSection === 'likedCourses' ? 'bg-gray-100' : ''}`}
               onClick={() => handleSectionChange('likedCourses')}
             >
-              <AiFillLike className='w-6 h-6' />
+              <AiFillLike className='' />
               <span className='ms-2'>Liked Courses</span>
             </button>
           </li>
           <li>
             <button
-              className={`flex w-full text-left p-2 ${activeSection === 'profile' ? 'bg-gray-600' : ''}`}
+              className={`rounded flex w-full text-left p-2 text-md items-center font-semibold ${activeSection === 'profile' ? 'bg-gray-100' : ''}`}
               onClick={() => handleSectionChange('profile')}
             >
-              <FaUser className='w-6 h-6' />
+              <FaUser className='' />
               <span className='ms-2'>Profile</span>
             </button>
           </li>
           <li>
             <button
-              className={`flex w-full text-left p-2 text-red-400`}
+              className={`rounded flex w-full text-left p-2 text-md items-center font-semibold text-red-400`}
               onClick={handleLogout}
             >
-              <IoLogOut className='w-6 h-6' />
+              <IoLogOut className='' />
               <span className='ms-2'>Logout</span>
             </button>
           </li>

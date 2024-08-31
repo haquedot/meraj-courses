@@ -1,17 +1,51 @@
-// src/utils/database.js
-import { ref, set, get, onValue } from 'firebase/database';
+import { ref, set, get } from 'firebase/database';
 import { database } from '../firebase';
 
-export const saveEnrolledCourses = (userId, courses) => {
-  set(ref(database, 'users/' + userId + '/enrolledCourses'), courses)
-    .then(() => {
-      console.log('Courses saved successfully.');
-    })
-    .catch((error) => {
-      console.error('Error saving courses:', error);
-    });
+// Updated function to save completed courses
+export const saveCompletedCourses = async (userId, completedCourses) => {
+  try {
+    // Save completed courses to the database
+    await set(ref(database, `users/${userId}/completedCourses`), completedCourses);
+  } catch (error) {
+    console.error('Failed to save completed courses:', error);
+    throw error;
+  }
 };
 
+
+// Fetch completed courses for a user
+export const fetchCompletedCourses = async (userId) => {
+  try {
+    const completedCoursesRef = ref(database, `users/${userId}/completedCourses`);
+    const snapshot = await get(completedCoursesRef);
+
+    if (snapshot.exists()) {
+      const completedCoursesData = snapshot.val();
+      const courseIds = Object.keys(completedCoursesData);
+
+      // Fetch course details for each completed course
+      const coursesRef = ref(database, 'courses');
+      const allCoursesSnapshot = await get(coursesRef);
+
+      if (allCoursesSnapshot.exists()) {
+        const allCourses = allCoursesSnapshot.val();
+        return courseIds.map(courseId => ({ id: courseId, ...allCourses[courseId] }));
+      } else {
+        console.log('No courses found');
+        return [];
+      }
+    } else {
+      console.log('No completed courses found');
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching completed courses:', error);
+    return [];
+  }
+};
+
+
+// Fetch enrolled courses for a user
 export const fetchEnrolledCourses = async (userId) => {
   try {
     const enrolledCoursesRef = ref(database, `users/${userId}/enrolledCourses`);
@@ -22,15 +56,16 @@ export const fetchEnrolledCourses = async (userId) => {
       const courseIds = Object.keys(enrolledCoursesData);
 
       // Fetch course details for each enrolled course
-      const courses = await Promise.all(
-        courseIds.map(async (courseId) => {
-          const courseRef = ref(database, `courses/${courseId}`);
-          const courseSnapshot = await get(courseRef);
-          return { id: courseId, ...(courseSnapshot.val() || {}) };
-        })
-      );
+      const coursesRef = ref(database, 'courses');
+      const allCoursesSnapshot = await get(coursesRef);
 
-      return courses;
+      if (allCoursesSnapshot.exists()) {
+        const allCourses = allCoursesSnapshot.val();
+        return courseIds.map(courseId => ({ id: courseId, ...allCourses[courseId] }));
+      } else {
+        console.log('No courses found');
+        return [];
+      }
     } else {
       console.log('No enrolled courses found');
       return [];
@@ -41,26 +76,36 @@ export const fetchEnrolledCourses = async (userId) => {
   }
 };
 
-// Fetch liked courses from Firebase
+// Fetch liked courses for a user
 export const fetchLikedCourses = async (userId) => {
-  const userLikesRef = ref(database, `users/${userId}/likedCourses`);
-  return new Promise((resolve, reject) => {
-    onValue(userLikesRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const courseIds = Object.keys(data);
+  try {
+    const userLikesRef = ref(database, `users/${userId}/likedCourses`);
+    const snapshot = await get(userLikesRef);
+
+    if (snapshot.exists()) {
+      const likedCoursesData = snapshot.val();
+      const courseIds = Object.keys(likedCoursesData);
+
+      if (courseIds.length > 0) {
         const coursesRef = ref(database, 'courses');
-        onValue(coursesRef, (snapshot) => {
-          const allCourses = snapshot.val();
-          if (allCourses) {
-            resolve(courseIds.map(id => ({ id, ...allCourses[id] })));
-          } else {
-            resolve([]);
-          }
-        }, reject);
+        const allCoursesSnapshot = await get(coursesRef);
+
+        if (allCoursesSnapshot.exists()) {
+          const allCourses = allCoursesSnapshot.val();
+          return courseIds.map(id => ({ id, ...allCourses[id] }));
+        } else {
+          console.log('No courses found');
+          return [];
+        }
       } else {
-        resolve([]);
+        return [];
       }
-    }, reject);
-  });
+    } else {
+      console.log('No liked courses found');
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching liked courses:', error);
+    return [];
+  }
 };

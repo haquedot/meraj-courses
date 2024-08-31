@@ -5,6 +5,9 @@ import { enrollInCourse } from '../features/studentSlice';
 import { ref, onValue, set, get, update } from 'firebase/database';
 import { auth, database } from '../firebase';
 import { ImSpinner } from 'react-icons/im';
+import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
+import { FaRegCalendarAlt, FaRegUser } from 'react-icons/fa';
+import { CiSearch } from 'react-icons/ci';
 
 const CourseListing = () => {
   const dispatch = useDispatch();
@@ -124,50 +127,82 @@ const CourseListing = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 md:w-10/12 mx-auto pb-20">
       {isLoading ? (
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex justify-center items-center h-[90vh]">
           <ImSpinner className="animate-spin h-12 w-12 text-blue-500" />
         </div>
       ) : (
         <>
-          <input
-            type="text"
-            placeholder="Search by course name or instructor"
-            className="mb-4 p-2 border rounded"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <div className="relative mb-4 w-max">
+            <input
+              type="text"
+              id="search"
+              placeholder="Search"
+              className="pl-4 pr-10 py-2 border rounded-full"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <label htmlFor="search" className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+              <CiSearch className="h-5 w-5 text-gray-400" />
+            </label>
+          </div>
+
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {filteredCourses.length > 0 ? (
                 filteredCourses.map((course) => (
-                  <div key={course.id} className="border p-4 rounded-lg shadow-md">
+                  <div key={course.id} className="border rounded-3xl relative">
                     <Link to={`/course/${course.id}`} className="block mb-4">
-                      <h2 className="text-xl font-bold">{course.name}</h2>
-                      <p>Instructor: {course.instructor}</p>
+                      <img
+                        src={course.thumbnail}
+                        alt={`${course.name} image`}
+                        className="w-full h-48 object-cover border-b rounded-t-3xl mb-3"
+                      />
+                      <div className="px-4">
+                        <div className="flex justify-between pb-3">
+                          <p className='text-neutral-400 flex items-center'>
+                            <FaRegUser className="inline-block text-sm text-neutral-400 me-2" />
+                            <span className='text-sm'>{course.instructor}</span>
+                          </p>
+                          <p className='text-neutral-400 flex items-center'>
+                            <FaRegCalendarAlt className="inline-block text-sm text-neutral-400 me-2" />
+                            <span className='text-sm'>{course.duration}</span>
+                          </p>
+                        </div>
+                        <h2 className="text-xl font-bold">{course.name}</h2>
+                        <p className="text-gray-600">{course.description}</p>
+                      </div>
                     </Link>
-                    <button
-                      onClick={() => handleEnroll(course)}
-                      className={`bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 ${enrolledCourses.find((c) => c.id === course.id) ? 'bg-gray-500 cursor-not-allowed' : ''}`}
-                      disabled={enrolledCourses.find((c) => c.id === course.id)}
-                    >
-                      {enrolledCourses.find((c) => c.id === course.id) ? 'Enrolled' : 'Enroll'}
-                    </button>
-                    <div className="mt-4 flex items-center">
-                      <button
-                        onClick={() => handleLike(course.id)}
-                        className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
-                        disabled={likedCourses[course.id]}
-                      >
-                        {
-                          likedCourses[course.id] ?
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="icon icon-tabler icons-tabler-filled icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M13 3a3 3 0 0 1 2.995 2.824l.005 .176v4h2a3 3 0 0 1 2.98 2.65l.015 .174l.005 .176l-.02 .196l-1.006 5.032c-.381 1.626 -1.502 2.796 -2.81 2.78l-.164 -.008h-8a1 1 0 0 1 -.993 -.883l-.007 -.117l.001 -9.536a1 1 0 0 1 .5 -.865a2.998 2.998 0 0 0 1.492 -2.397l.007 -.202v-1a3 3 0 0 1 3 -3z" /><path d="M5 10a1 1 0 0 1 .993 .883l.007 .117v9a1 1 0 0 1 -.883 .993l-.117 .007h-1a2 2 0 0 1 -1.995 -1.85l-.005 -.15v-7a2 2 0 0 1 1.85 -1.995l.15 -.005h1z" /></svg>
-                            :
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 11v9a1 1 0 0 0 1 1h8a4 4 0 0 0 4 -4v-5a3 3 0 0 0 -3 -3h-2l1 -4a2 2 0 1 0 -4 0v10" /><path d="M7 11h-3a1 1 0 0 0 -1 1v6a1 1 0 0 0 1 1h3" /></svg>
-                        }
-                      </button>
-                      <span className="ml-2">{course.likes || 0}</span>
+                    <span className='absolute top-3 left-3 bg-green-50 text-xs font-semibold text-green-600 px-3 py-1 rounded-full'>{course.location}</span>
+                    <div className="p-4 pt-0">
+                      <div className="flex justify-between">
+                        <div className="flex items-center">
+                          <button
+                            onClick={() => handleLike(course.id)}
+                            disabled={likedCourses[course.id]}
+                          >
+                            {likedCourses[course.id] ? (
+                              <AiFillLike className="h-6 w-6 text-blue-500" />
+                            ) : (
+                              <AiOutlineLike className="h-6 w-6 text-blue-500" />
+                            )}
+                          </button>
+                          <span className="ml-1 text-sm text-neutral-600 font-semibold">{course.likes || 0}</span>
+                        </div>
+                        {enrolledCourses.find((c) => c.id === course.id) ? 
+                        (
+                          <span className="text-sm bg-green-50 px-4 py-1 rounded-full text-green-500 font-semibold">Enrolled</span>
+                        ) : (
+                          <button
+                            onClick={() => handleEnroll(course)}
+                            className={`text-neutral-500 text-sm font-semibold py-1 text-center px-4 border-2 border-neutral-500 rounded-full hover:bg-blue-600 hover:border-blue-600 hover:text-white ${enrolledCourses.find((c) => c.id === course.id) ? 'bg-gray-500 cursor-not-allowed' : ''}`}
+                            disabled={enrolledCourses.find((c) => c.id === course.id)}
+                          >Enroll
+
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))
