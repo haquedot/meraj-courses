@@ -17,7 +17,7 @@ const Navbar = () => {
         <nav className="text-neutral-800 text-md font-semibold border-b w-full">
             <div className="w-10/12 flex justify-between py-4 md:px-4 mx-auto">
                 <div className="flex">
-                    <Link to="/" className="mr-4">Courses</Link>
+                    <Link to="/" className="mr-4">Meraj Courses</Link>
                 </div>
                 <div className="flex gap-3">
                     {user ? (
