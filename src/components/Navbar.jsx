@@ -15,7 +15,7 @@ const Navbar = () => {
 
     return (
         <nav className="text-neutral-800 text-md font-semibold border-b w-full">
-            <div className="w-10/12 flex justify-between py-4 md:px-4 mx-auto">
+            <div className="w-10/12 flex items-center justify-between py-2 md:px-4 mx-auto">
                 <div className="flex">
                     <Link to="/" className="mr-4">Courses</Link>
                 </div>
@@ -23,15 +23,17 @@ const Navbar = () => {
                     {user ? (
                         <>
                             <Link to="/dashboard" className="">
-                                <FaUserCircle className='inline-block text-blue-500 h-6 w-6' />
+                                <FaUserCircle className='inline-block text-blue-500 h-8 w-8' />
                             </Link>
                             <button onClick={handleLogout} className="">
-                                <IoLogOut className='inline-block text-red-500 h-6 w-6' />
+                                <IoLogOut className='inline-block text-red-500 h-8 w-8' />
                             </button>
                         </>
                     ) : (
                         <>
-                            <Link to="/login" className="">Login</Link>
+                            <Link to="/login" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600">
+                                Login
+                            </Link>
                         </>
                     )}
                 </div></div>

@@ -109,3 +109,4 @@ export const fetchLikedCourses = async (userId) => {
     return [];
   }
 };
+

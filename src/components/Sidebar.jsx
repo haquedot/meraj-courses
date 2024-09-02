@@ -51,7 +51,7 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
       </button>
 
       <div
-        className={`w-50 fixed top-0 left-0 h-full bg-white text-neutral-800 border-r min-h-screen pt-16 p-3 md:p-3 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`w-50 fixed z-20 top-0 left-0 h-full bg-white text-neutral-800 border-r min-h-screen pt-16 p-3 md:p-3 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <ul className="space-y-4">
           <li>
