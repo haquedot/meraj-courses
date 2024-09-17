@@ -56,7 +56,6 @@ const StudentDashboard = () => {
       return Object.keys(newCompletedCourses).map(id => ({ id, ...newCompletedCourses[id] }));
     });
   
-    // Save completed courses in the required format
     const completedCoursesMap = { ...completedCourses.reduce((acc, course) => ({ ...acc, [course.id]: true }), {}) };
     completedCoursesMap[courseId] = true;
   
@@ -157,7 +156,6 @@ const StudentDashboard = () => {
                       <h2 className="text-xl font-bold">{course.name}</h2>
                       <p className="text-gray-600 mb-2">{course.description}</p>
 
-                      {/* Progress Bar */}
                       <div className="flex items-center w-80 bg-gray-200 rounded-full h-2.5">
                         <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `50%` }}></div>
                         <p className="text-xs text-neutral-800 font-semibold">50%</p>
